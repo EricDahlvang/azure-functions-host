@@ -2,7 +2,9 @@
 // Licensed under the MIT License. See License.txt in the project root for license information.
 
 using System;
+using System.Collections;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,6 +27,13 @@ namespace Microsoft.Azure.WebJobs.Script.WebHost
             InitializeProcess();
 
             var host = BuildWebHost(args);
+
+            Console.WriteLine($"Framework: {RuntimeInformation.FrameworkDescription}");
+            Console.WriteLine("Host process environment:");
+            foreach (DictionaryEntry envVar in Environment.GetEnvironmentVariables().Cast<DictionaryEntry>().OrderBy(p => p.Key))
+            {
+                Console.WriteLine($"  {envVar.Key}: {envVar.Value}");
+            }
 
             host.RunAsync()
                 .Wait();
