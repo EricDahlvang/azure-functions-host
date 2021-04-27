@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Reflection;
 using System.Threading.Tasks;
 using Xunit.Abstractions;
 
@@ -53,7 +54,11 @@ namespace Microsoft.Azure.WebJobs.Script.Tests.Integration.WebHostEndToEnd
 
         public async Task StartHostAsync(ITestOutputHelper outputHelper = null)
         {
-            string workingDir = Path.GetFullPath(@"..\..\..\..\..\src\WebJobs.Script.WebHost\bin\Debug\net6.0\");
+            // WebHost folder name will match this one.
+            var dirPath = Path.GetDirectoryName(typeof(HostProcessLauncher).Assembly.Location);
+            var dirName = new DirectoryInfo(dirPath).Name;
+
+            string workingDir = Path.GetFullPath($@"..\..\..\..\..\src\WebJobs.Script.WebHost\bin\Debug\{dirName}\");
             string filePath = Path.Combine(workingDir, "Microsoft.Azure.WebJobs.Script.WebHost.exe");
 
             outputHelper?.WriteLine($"Test: {_testPath}");
@@ -80,12 +85,6 @@ namespace Microsoft.Azure.WebJobs.Script.Tests.Integration.WebHostEndToEnd
             foreach (var envVar in _envVars)
             {
                 _process.StartInfo.Environment.Add(envVar.Key, envVar.Value);
-            }
-
-            outputHelper?.WriteLine($"  Env vars:");
-            foreach (var envVar in _process.StartInfo.Environment.OrderBy(p => p.Key))
-            {
-                outputHelper?.WriteLine($"    {envVar.Key}: {envVar.Value}");
             }
 
             _process.EnableRaisingEvents = true;

@@ -28,13 +28,6 @@ namespace Microsoft.Azure.WebJobs.Script.WebHost
 
             var host = BuildWebHost(args);
 
-            Console.WriteLine($"Framework: {RuntimeInformation.FrameworkDescription}");
-            Console.WriteLine("Host process environment:");
-            foreach (DictionaryEntry envVar in Environment.GetEnvironmentVariables().Cast<DictionaryEntry>().OrderBy(p => p.Key))
-            {
-                Console.WriteLine($"  {envVar.Key}: {envVar.Value}");
-            }
-
             host.RunAsync()
                 .Wait();
         }

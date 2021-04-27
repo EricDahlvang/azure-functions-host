@@ -6,14 +6,12 @@ name: 4.0.$(buildNumber)
 pr:
   branches:
     include:
-    - dev
     - v4.x
     - release/4.0*
 
 trigger:
   branches:
     include:
-    - dev
     - v4.x
     - release/4.0*
 
